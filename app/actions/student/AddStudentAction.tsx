@@ -30,6 +30,6 @@ export async function AddStudentAction(formData:FormData){
     });
 
     revalidatePath("/student");
-    redirect("/student");
+    redirect("/student?msg=added");
     
 }

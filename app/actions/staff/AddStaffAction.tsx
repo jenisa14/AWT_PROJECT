@@ -32,6 +32,6 @@ export async function AddStaffAction(formData:FormData){
     });
 
     revalidatePath("/staff");
-    redirect("/staff");
+    redirect("/staff?msg=added");
     
 }

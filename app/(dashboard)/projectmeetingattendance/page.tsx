@@ -1,6 +1,7 @@
 import { prisma } from "@/app/lib/prisma";
 import Link from "next/link";
 import DeleteProjectMeetingAttendanceBtn from "@/app/ui/projectmeetingattendance/DeleteProjectMeetingAttendanceBtn";
+import SuccessToast from "@/app/components/SuccessToast";
 
 export default async function ProjectMeetingAttendanceList({
   searchParams,
@@ -12,54 +13,53 @@ export default async function ProjectMeetingAttendanceList({
   const attendance = await prisma.projectmeetingattendance.findMany();
 
   return (
-    <div style={{ padding: 20, maxWidth: 900, margin: "0 auto" }}>
+    <div
+      style={{
+        padding: "20px",
+        maxWidth: "900px",
+        margin: "0 auto",
+        fontFamily: "Segoe UI, Arial, sans-serif",
+        backgroundColor: "#f8fafc",
+      }}
+    >
+      <SuccessToast msg={msg} entityName="Attendance" />
 
-      {msg && (
-        <div style={{
-          backgroundColor: "#16a34a",
-          color: "white",
-          padding: 8,
-          marginBottom: 10,
-          borderRadius: 4,
-        }}>
-          {msg === "added" && "Attendance added successfully"}
-          {msg === "updated" && "Attendance updated successfully"}
-          {msg === "deleted" && "Attendance deleted successfully"}
-        </div>
-      )}
-
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h2>Project Meeting Attendance</h2>
-
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "16px",
+        }}
+      >
+        <h2 style={{ margin: 0, color: "#111827" }}>Project Meeting Attendance</h2>
         <Link href="/projectmeetingattendance/add">
-          <button>Add Attendance</button>
+          <button style={addBtnStyle}>+ Add Attendance</button>
         </Link>
       </div>
 
-      <table border={1} cellPadding={10} width="100%">
+      <table style={tableStyle}>
         <thead>
-          <tr>
-            <th>Meeting ID</th>
-            <th>Student ID</th>
-            <th>Present</th>
-            <th>Actions</th>
+          <tr style={{ backgroundColor: "#e5e7eb" }}>
+            <th style={thStyle}>Meeting ID</th>
+            <th style={thStyle}>Student ID</th>
+            <th style={thStyle}>Present</th>
+            <th style={{ ...thStyle, textAlign: "center" }}>Actions</th>
           </tr>
         </thead>
-
         <tbody>
-          {attendance.map(a => (
-            <tr key={a.ProjectMeetingAttendanceID}>
-              <td>{a.ProjectMeetingID}</td>
-              <td>{a.StudentID}</td>
-              <td>{a.IsPresent ? "Yes" : "No"}</td>
-              <td>
-                <Link href={`/projectmeetingattendance/edit/${a.ProjectMeetingAttendanceID}`}>
-                  <button>Edit</button>
-                </Link>
-
-                <DeleteProjectMeetingAttendanceBtn
-                  id={a.ProjectMeetingAttendanceID}
-                />
+          {attendance.map((a) => (
+            <tr key={a.ProjectMeetingAttendanceID} style={{ borderBottom: "1px solid #e5e7eb" }}>
+              <td style={tdStyle}>{a.ProjectMeetingID}</td>
+              <td style={tdStyle}>{a.StudentID}</td>
+              <td style={tdStyle}>{a.IsPresent ? "Yes" : "No"}</td>
+              <td style={tdStyle}>
+                <div style={{ display: "flex", gap: "8px", justifyContent: "center" }}>
+                  <Link href={`/projectmeetingattendance/edit/${a.ProjectMeetingAttendanceID}`}>
+                    <button style={{ ...actionBtnStyle, backgroundColor: "#16a34a" }}>Edit</button>
+                  </Link>
+                  <DeleteProjectMeetingAttendanceBtn id={a.ProjectMeetingAttendanceID} />
+                </div>
               </td>
             </tr>
           ))}
@@ -68,3 +68,42 @@ export default async function ProjectMeetingAttendanceList({
     </div>
   );
 }
+
+const tableStyle = {
+  width: "100%",
+  borderCollapse: "collapse" as const,
+  backgroundColor: "white",
+  borderRadius: "6px",
+  overflow: "hidden",
+  boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+};
+const thStyle = {
+  padding: "12px",
+  textAlign: "left" as const,
+  fontWeight: 600,
+  color: "#374151",
+  borderBottom: "2px solid #d1d5db",
+};
+const tdStyle = {
+  padding: "12px",
+  textAlign: "center" as const,
+  color: "#374151",
+};
+const actionBtnStyle = {
+  color: "white",
+  padding: "6px 10px",
+  border: "none",
+  borderRadius: "5px",
+  cursor: "pointer",
+  fontSize: "14px",
+  fontWeight: 500,
+};
+const addBtnStyle = {
+  backgroundColor: "#2563eb",
+  color: "white",
+  padding: "8px 14px",
+  border: "none",
+  borderRadius: "6px",
+  cursor: "pointer",
+  fontWeight: 500,
+};

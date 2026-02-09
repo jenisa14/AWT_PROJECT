@@ -28,5 +28,5 @@ export default async function UpdateStaffAction(formData:FormData){
     });
 
     revalidatePath("/staff");
-    redirect("/staff");
+    redirect("/staff?msg=updated");
 }

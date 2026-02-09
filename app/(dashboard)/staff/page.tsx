@@ -1,7 +1,6 @@
 import { prisma } from "@/app/lib/prisma";
 import DeleteStaffBtn from "@/app/ui/staff/DeleteStaffBtn";
-
-
+import SuccessToast from "@/app/components/SuccessToast";
 import Link from "next/link";
 
 export default async function StffList({
@@ -23,7 +22,8 @@ export default async function StffList({
         backgroundColor: "#f8fafc",
       }}
     >
-     
+      <SuccessToast msg={msg} entityName="Staff" />
+
       <div
         style={{
           display: "flex",
@@ -50,18 +50,6 @@ export default async function StffList({
           </button>
         </Link>
       </div>
-
-      {msg === "deleted" && (
-        <p
-          style={{
-            color: "green",
-            marginBottom: "12px",
-            fontWeight: 500,
-          }}
-        >
-          Staff deleted successfully
-        </p>
-      )}
 
     
       <table

@@ -28,5 +28,5 @@ export default async function UpdateStudentAction(formData:FormData){
     });
 
     revalidatePath("/student");
-    redirect("/student");
+    redirect("/student?msg=updated");
 }

@@ -14,7 +14,19 @@ export default function DeleteProjectMeetingAttendanceBtn({
         name="ProjectMeetingAttendanceID"
         value={id}
       />
-      <button type="submit" style={{ backgroundColor: "red", color: "white" }}>
+      <button
+        type="submit"
+        style={{
+          backgroundColor: "#dc2626",
+          color: "white",
+          padding: "6px 10px",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+          fontSize: "14px",
+          fontWeight: 500,
+        }}
+      >
         Delete
       </button>
     </form>

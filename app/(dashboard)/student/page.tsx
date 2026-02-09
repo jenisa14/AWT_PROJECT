@@ -1,5 +1,6 @@
 import { prisma } from "@/app/lib/prisma";
 import DeleteStudentBtn from "@/app/ui/student/DeleteStudentBtn";
+import SuccessToast from "@/app/components/SuccessToast";
 import Link from "next/link";
 
 export default async function StudentList({
@@ -7,7 +8,6 @@ export default async function StudentList({
 }: {
   searchParams: Promise<{ msg?: string }>;
 }) {
- 
   const { msg } = await searchParams;
 
   const students = await prisma.student.findMany();
@@ -22,7 +22,8 @@ export default async function StudentList({
         backgroundColor: "#f8fafc",
       }}
     >
-      {/* Header */}
+      <SuccessToast msg={msg} entityName="Student" />
+
       <div
         style={{
           display: "flex",
@@ -49,19 +50,6 @@ export default async function StudentList({
           </button>
         </Link>
       </div>
-
-      
-      {msg === "deleted" && (
-        <p
-          style={{
-            color: "green",
-            marginBottom: "12px",
-            fontWeight: 500,
-          }}
-        >
-          Student deleted successfully
-        </p>
-      )}
 
      
       <table
