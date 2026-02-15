@@ -1,6 +1,6 @@
-
 import UpdateStaffAction from "@/app/actions/staff/UpdateStaffAction";
 import { prisma } from "@/app/lib/prisma";
+import { theme, styles } from "@/app/lib/theme";
 import Link from "next/link";
 
 export default async function EditStaff({
@@ -8,13 +8,11 @@ export default async function EditStaff({
 }: {
   params: Promise<{ id: string }>;
 }) {
-
   const { id } = await params;
-
   const StaffID = Number(id);
 
   if (Number.isNaN(StaffID)) {
-    return <h2 className="text-white text-center mt-10">Invalid Staff</h2>;
+    return <h2 style={{ color: theme.colors.text, textAlign: "center", marginTop: theme.spacing.xl }}>Invalid Staff</h2>;
   }
 
   const staff = await prisma.staff.findUnique({
@@ -22,51 +20,55 @@ export default async function EditStaff({
   });
 
   if (!staff) {
-    return <h2 className="text-white text-center mt-10">Staff not found</h2>;
+    return <h2 style={{ color: theme.colors.text, textAlign: "center", marginTop: theme.spacing.xl }}>Staff not found</h2>;
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/70">
-      <div className="w-full max-w-md rounded-xl bg-zinc-900 p-6 shadow-2xl">
-        <h2 className="mb-6 text-center text-2xl font-semibold text-white">
-          Edit Staff
-        </h2>
+    <div style={{ padding: theme.spacing.xl, backgroundColor: theme.colors.background, minHeight: "100%" }}>
+      <div style={styles.formCard()}>
+        <h2 style={{ ...styles.title(), marginBottom: theme.spacing.lg }}>Edit Staff</h2>
 
-        <form action={UpdateStaffAction} className="space-y-4">
+        <form action={UpdateStaffAction}>
           <input type="hidden" name="StaffID" value={staff.StaffID} />
 
-          <input
-            type="text"
-            name="StaffName"
-            defaultValue={staff.StaffName}
-            className="w-full rounded-md border bg-zinc-800 px-4 py-2 text-white"
-            required
-          />
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="StaffName" style={styles.label()}>StaffName</label>
+            <input
+              id="StaffName"
+              type="text"
+              name="StaffName"
+              defaultValue={staff.StaffName}
+              style={styles.input()}
+              required
+            />
+          </div>
 
-          <input
-            type="text"
-            name="Email"
-            defaultValue={staff.Email ?? ""}
-            className="w-full rounded-md border bg-zinc-800 px-4 py-2 text-white"
-            required
-          />
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="Email" style={styles.label()}>Email</label>
+            <input
+              id="Email"
+              type="email"
+              name="Email"
+              defaultValue={staff.Email ?? ""}
+              style={styles.input()}
+              required
+            />
+          </div>
 
-          <input
-            type="text"
-            name="Phone"
-            defaultValue={staff.Phone ?? ""}
-            className="w-full rounded-md border bg-zinc-800 px-4 py-2 text-white"
-            required
-          />
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="Phone" style={styles.label()}>Phone</label>
+            <input
+              id="Phone"
+              type="text"
+              name="Phone"
+              defaultValue={staff.Phone ?? ""}
+              style={styles.input()}
+            />
+          </div>
 
-          <div className="flex justify-between pt-4">
-            <Link href="/staff" className="rounded-md bg-zinc-700 px-4 py-2 text-white">
-              Back
-            </Link>
-
-            <button type="submit" className="rounded-md bg-blue-600 px-4 py-2 text-white">
-              Update
-            </button>
+          <div style={styles.btnWrap()}>
+            <button type="submit" style={styles.btnPrimary()}>Update</button>
+            <Link href="/staff"><button type="button" style={styles.btnSecondary()}>Cancel</button></Link>
           </div>
         </form>
       </div>

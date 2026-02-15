@@ -1,53 +1,7 @@
 import { prisma } from "@/app/lib/prisma";
 import UpdateProjectMeetingAction from "@/app/actions/projectmeeting/UpdateProjectMeetingAction";
+import { theme, styles } from "@/app/lib/theme";
 import Link from "next/link";
-
-const formWrap = {
-  padding: "20px",
-  maxWidth: "500px",
-  margin: "0 auto",
-  backgroundColor: "#f8fafc",
-  fontFamily: "Segoe UI, Arial, sans-serif",
-};
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  marginBottom: "12px",
-  border: "1px solid #d1d5db",
-  borderRadius: "6px",
-  fontSize: "14px",
-  boxSizing: "border-box" as const,
-};
-const textareaStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  marginBottom: "12px",
-  border: "1px solid #d1d5db",
-  borderRadius: "6px",
-  fontSize: "14px",
-  boxSizing: "border-box" as const,
-  minHeight: "80px",
-};
-const labelStyle = { display: "block", marginBottom: "4px", fontWeight: 500, color: "#374151" };
-const btnWrap = { display: "flex", gap: "10px", marginTop: "16px" };
-const primaryBtn = {
-  backgroundColor: "#2563eb",
-  color: "white",
-  padding: "10px 16px",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  fontWeight: 500,
-};
-const secondaryBtn = {
-  backgroundColor: "#6b7280",
-  color: "white",
-  padding: "10px 16px",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  fontWeight: 500,
-};
 
 export default async function EditProjectMeeting({
   params,
@@ -60,40 +14,49 @@ export default async function EditProjectMeeting({
     where: { ProjectMeetingID: Number(id) },
   });
 
-  if (!meeting) return <h2>Meeting not found</h2>;
+  if (!meeting) return <h2 style={{ color: theme.colors.text }}>Meeting not found</h2>;
 
   return (
-    <div style={formWrap}>
-      <form action={UpdateProjectMeetingAction}>
-        <input type="hidden" name="ProjectMeetingID" value={meeting.ProjectMeetingID} />
+    <div style={{ padding: theme.spacing.xl, backgroundColor: theme.colors.background, minHeight: "100%" }}>
+      <div style={styles.formCard()}>
+        <h2 style={{ ...styles.title(), marginBottom: theme.spacing.lg }}>Edit Project Meeting</h2>
 
-        <h2 style={{ marginBottom: "16px", color: "#111827" }}>Edit Project Meeting</h2>
+        <form action={UpdateProjectMeetingAction}>
+          <input type="hidden" name="ProjectMeetingID" value={meeting.ProjectMeetingID} />
 
-        <label style={labelStyle}>Project Group ID</label>
-        <input name="ProjectGroupID" defaultValue={meeting.ProjectGroupID} style={inputStyle} />
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="ProjectGroupID" style={styles.label()}>Project Group ID</label>
+            <input id="ProjectGroupID" name="ProjectGroupID" type="number" defaultValue={meeting.ProjectGroupID} style={styles.input()} />
+          </div>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="GuideStaffID" style={styles.label()}>Guide Staff ID</label>
+            <input id="GuideStaffID" name="GuideStaffID" type="number" defaultValue={meeting.GuideStaffID} style={styles.input()} />
+          </div>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="MeetingDateTime" style={styles.label()}>Date & Time</label>
+            <input
+              id="MeetingDateTime"
+              type="datetime-local"
+              name="MeetingDateTime"
+              defaultValue={meeting.MeetingDateTime.toISOString().slice(0, 16)}
+              style={styles.input()}
+            />
+          </div>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="MeetingPurpose" style={styles.label()}>Purpose</label>
+            <input id="MeetingPurpose" name="MeetingPurpose" defaultValue={meeting.MeetingPurpose ?? ""} style={styles.input()} />
+          </div>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="MeetingNotes" style={styles.label()}>Notes</label>
+            <textarea id="MeetingNotes" name="MeetingNotes" defaultValue={meeting.MeetingNotes ?? ""} style={styles.textarea()} />
+          </div>
 
-        <label style={labelStyle}>Guide Staff ID</label>
-        <input name="GuideStaffID" defaultValue={meeting.GuideStaffID} style={inputStyle} />
-
-        <label style={labelStyle}>Date & Time</label>
-        <input
-          type="datetime-local"
-          name="MeetingDateTime"
-          defaultValue={meeting.MeetingDateTime.toISOString().slice(0, 16)}
-          style={inputStyle}
-        />
-
-        <label style={labelStyle}>Purpose</label>
-        <input name="MeetingPurpose" defaultValue={meeting.MeetingPurpose ?? ""} style={inputStyle} />
-
-        <label style={labelStyle}>Notes</label>
-        <textarea name="MeetingNotes" defaultValue={meeting.MeetingNotes ?? ""} style={textareaStyle} />
-
-        <div style={btnWrap}>
-          <button type="submit" style={primaryBtn}>Update</button>
-          <Link href="/projectmeeting"><button type="button" style={secondaryBtn}>Cancel</button></Link>
-        </div>
-      </form>
+          <div style={styles.btnWrap()}>
+            <button type="submit" style={styles.btnPrimary()}>Update</button>
+            <Link href="/projectmeeting"><button type="button" style={styles.btnSecondary()}>Cancel</button></Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,51 +1,37 @@
 import { AddStaffAction } from "@/app/actions/staff/AddStaffAction";
+import { theme, styles } from "@/app/lib/theme";
 import Link from "next/link";
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  marginBottom: "12px",
-  border: "1px solid #d1d5db",
-  borderRadius: "6px",
-  fontSize: "14px",
-  boxSizing: "border-box" as const,
-};
-const btnWrap = { display: "flex", gap: "10px", marginTop: "16px" };
-const primaryBtn = {
-  backgroundColor: "#2563eb",
-  color: "white",
-  padding: "10px 16px",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  fontWeight: 500,
-};
-const secondaryBtn = {
-  backgroundColor: "#6b7280",
-  color: "white",
-  padding: "10px 16px",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  fontWeight: 500,
-};
 
 export default function AddStaff() {
   return (
-    <div style={{ padding: "20px", maxWidth: "450px", margin: "40px auto", backgroundColor: "#f8fafc", fontFamily: "Segoe UI, Arial, sans-serif" }}>
-      <h2 style={{ marginBottom: "16px", color: "#111827" }}>Add Staff</h2>
+    <div style={{ padding: theme.spacing.xl, backgroundColor: theme.colors.background, minHeight: "100%" }}>
+      <div style={styles.formCard()}>
+        <h2 style={{ ...styles.title(), marginBottom: theme.spacing.lg }}>Add Staff</h2>
 
-      <form action={AddStaffAction}>
-        <input name="StaffName" placeholder="Staff Name" style={inputStyle} />
-        <input name="Email" placeholder="Email" type="email" style={inputStyle} />
-        <input name="Phone" placeholder="Phone" style={inputStyle} />
-        <input type="password" name="Password" placeholder="Password" required style={inputStyle} />
+        <form action={AddStaffAction}>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="StaffName" style={styles.label()}>Staff Name</label>
+            <input id="StaffName" name="StaffName" style={styles.input()} required />
+          </div>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="Email" style={styles.label()}>Email</label>
+            <input id="Email" name="Email" type="email" style={styles.input()} required />
+          </div>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="Phone" style={styles.label()}>Phone</label>
+            <input id="Phone" name="Phone" style={styles.input()} />
+          </div>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="Password" style={styles.label()}>Password</label>
+            <input id="Password" type="password" name="Password" style={styles.input()} required />
+          </div>
 
-        <div style={btnWrap}>
-          <button type="submit" style={primaryBtn}>Save Staff</button>
-          <Link href="/staff"><button type="button" style={secondaryBtn}>Cancel</button></Link>
-        </div>
-      </form>
+          <div style={styles.btnWrap()}>
+            <button type="submit" style={styles.btnPrimary()}>Save Staff</button>
+            <Link href="/staff"><button type="button" style={styles.btnSecondary()}>Cancel</button></Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

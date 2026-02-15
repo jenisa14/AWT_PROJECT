@@ -1,26 +1,34 @@
 import Link from "next/link";
+import { theme } from "@/app/lib/theme";
+
+const asideStyle: React.CSSProperties = {
+  width: 250,
+  backgroundColor: theme.colors.header,
+  color: "#fff",
+  padding: theme.spacing.xl,
+};
+const linkStyle: React.CSSProperties = {
+  display: "block",
+  padding: "10px 12px",
+  color: "#e2e8f0",
+  textDecoration: "none",
+  borderRadius: theme.radius.sm,
+  marginBottom: theme.spacing.sm,
+};
 
 export default function AdminSidebar() {
   return (
-    <aside
-      style={{
-        width: "220px",
-        backgroundColor: "#111827",
-        color: "white",
-        padding: "20px",
-      }}
-    >
-      <h3 style={{ marginBottom: "20px" }}>Admin Panel</h3>
-
-      <nav style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        <Link href="/dashboard" className="text-white">Dashboard</Link>
-        <Link href="/student">Students</Link>
-        <Link href="/staff">Staff</Link>
-        <Link href="/projecttype">Project Types</Link>
-        <Link href="/projectgroup">Project Groups</Link>
-        <Link href="/projectgroupmember">Group Members</Link>
-        <Link href="/projectmeeting">Meetings</Link>
-        <Link href="/projectmeetingattendance">Attendance</Link>
+    <aside style={asideStyle}>
+      <h3 style={{ marginBottom: theme.spacing.lg }}>Admin Panel</h3>
+      <nav>
+        <Link href="/admin/dashboard" style={linkStyle}>Dashboard</Link>
+        <Link href="/student" style={linkStyle}>Students</Link>
+        <Link href="/staff" style={linkStyle}>Staff</Link>
+        <Link href="/projecttype" style={linkStyle}>Project Types</Link>
+        <Link href="/projectgroup" style={linkStyle}>Project Groups</Link>
+        <Link href="/projectgroupmember" style={linkStyle}>Group Members</Link>
+        <Link href="/projectmeeting" style={linkStyle}>Meetings</Link>
+        <Link href="/projectmeetingattendance" style={linkStyle}>Attendance</Link>
       </nav>
     </aside>
   );

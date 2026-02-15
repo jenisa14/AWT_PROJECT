@@ -1,44 +1,63 @@
+"use server";
+
 import { prisma } from "@/app/lib/prisma";
+import { createSession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 
-export async function LoginAction(formData: FormData){
+/**
+ * ADMIN login: No database table. Uses env ADMIN_EMAIL / ADMIN_PASSWORD.
+ * STAFF and STUDENT use Staff and Student tables from your SPMS schema.
+ */
+export async function LoginAction(formData: FormData) {
+  const email = formData.get("Email")?.toString()?.trim();
+  const password = formData.get("Password")?.toString();
+  const roleRaw = formData.get("Role")?.toString()?.toLowerCase();
 
-    const email = formData.get("Email")?.toString();
-    const password = formData.get("Password")?.toString();
-    const role = formData.get("Role")?.toString();
-
-// -------------------------admin
-    if (role === "admin") {
-    if (email === "admin@gmail.com" && password === "admin123") {
-      redirect("/admin/dashboard");
-    }
-    throw new Error("Invalid admin credentials");
+  if (!email) {
+    redirect("/auth/login?error=" + encodeURIComponent("Email is required."));
   }
 
-// ----------------------staff
+  const adminEmail = process.env.ADMIN_EMAIL || "admin@gmail.com";
+  const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
 
-  if (role === "staff") {
-    const staff = await prisma.staff.findFirst({
-      where: { Email: email},
-    });
-
-    if (!staff || staff.Password !== password) {
-      throw new Error("Invalid staff login");
+  if (roleRaw === "admin") {
+    if (email === adminEmail && password === adminPassword) {
+      await createSession({ role: "ADMIN", email });
+      redirect("/admin/dashboard");
     }
+    redirect("/auth/login?error=" + encodeURIComponent("Invalid admin credentials."));
+  }
 
+  if (roleRaw === "staff") {
+    if (!password) redirect("/auth/login?error=" + encodeURIComponent("Password is required."));
+    const staff = await prisma.staff.findFirst({
+      where: { Email: email },
+    });
+    if (!staff || staff.Password !== password) {
+      redirect("/auth/login?error=" + encodeURIComponent("Invalid staff email or password."));
+    }
+    await createSession({
+      role: "STAFF",
+      id: staff.StaffID,
+      email: staff.Email ?? undefined,
+    });
     redirect("/staff/dashboard");
   }
 
-   if (role === "student") {
+  if (roleRaw === "student") {
     const student = await prisma.student.findFirst({
       where: { Email: email },
     });
-
     if (!student) {
-      throw new Error("Student not found");
+      redirect("/auth/login?error=" + encodeURIComponent("No student found with this email."));
     }
-
+    await createSession({
+      role: "STUDENT",
+      id: student.StudentID,
+      email: student.Email ?? undefined,
+    });
     redirect("/student/dashboard");
   }
 
+  redirect("/auth/login?error=" + encodeURIComponent("Please select a role and try again."));
 }

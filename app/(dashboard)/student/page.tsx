@@ -1,107 +1,43 @@
 import { prisma } from "@/app/lib/prisma";
-import DeleteStudentBtn from "@/app/ui/student/DeleteStudentBtn";
-import SuccessToast from "@/app/components/SuccessToast";
 import Link from "next/link";
+import ListPageLayout from "@/app/components/ListPageLayout";
+import DeleteStudentBtn from "@/app/ui/student/DeleteStudentBtn";
+import { resolveMsg } from "@/app/lib/resolveSearchParams";
+import { theme, styles } from "@/app/lib/theme";
 
 export default async function StudentList({
   searchParams,
 }: {
-  searchParams: Promise<{ msg?: string }>;
+  searchParams: Promise<{ msg?: string }> | { msg?: string };
 }) {
-  const { msg } = await searchParams;
-
+  const msg = await resolveMsg(searchParams);
   const students = await prisma.student.findMany();
 
   return (
-    <div
-      style={{
-        padding: "20px",
-        maxWidth: "750px",
-        margin: "0 auto",
-        fontFamily: "Segoe UI, Arial, sans-serif",
-        backgroundColor: "#f8fafc",
-      }}
-    >
-      <SuccessToast msg={msg} entityName="Student" />
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "16px",
-        }}
-      >
-        <h2 style={{ margin: 0, color: "#111827" }}>User List</h2>
-
-        <Link href="/student/add">
-          <button
-            style={{
-              backgroundColor: "#2563eb",
-              color: "white",
-              padding: "8px 14px",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontWeight: 500,
-            }}
-          >
-            + Add Student
-          </button>
-        </Link>
-      </div>
-
-     
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          backgroundColor: "white",
-          borderRadius: "6px",
-          overflow: "hidden",
-        }}
-      >
+    <ListPageLayout title="Students" addHref="/student/add" addLabel="Add Student" msg={msg} entityName="Student">
+      <table style={styles.table()}>
         <thead>
-          <tr style={{ backgroundColor: "#e5e7eb" }}>
-            <th style={thStyle}>Student Name</th>
-            <th style={thStyle}>Email</th>
-            <th style={thStyle}>Phone</th>
-            <th style={{ ...thStyle, textAlign: "center" }}>Actions</th>
+          <tr>
+            <th style={styles.th()}>Student Name</th>
+            <th style={styles.th()}>Email</th>
+            <th style={styles.th()}>Phone</th>
+            <th style={{ ...styles.th(), textAlign: "center" }}>Actions</th>
           </tr>
         </thead>
-
         <tbody>
           {students.map((s) => (
-            <tr
-              key={s.StudentID}
-              style={{ borderBottom: "1px solid #e5e7eb" }}
-            >
-              <td style={{ ...tdStyle, textAlign: "left", fontWeight: 500 }}>
-                {s.StudentName}
-              </td>
-
-              <td style={{ ...tdStyle, textAlign: "left" }}>{s.Email}</td>
-
-              <td style={{ ...tdStyle, textAlign: "left" }}>{s.Phone}</td>
-
-              <td style={tdStyle}>
-                <div style={{ display: "flex", gap: "8px" }}>
+            <tr key={s.StudentID} style={{ borderBottom: `1px solid ${theme.colors.borderLight}` }}>
+              <td style={{ ...styles.td(), textAlign: "left", fontWeight: 500 }}>{s.StudentName}</td>
+              <td style={{ ...styles.td(), textAlign: "left" }}>{s.Email}</td>
+              <td style={{ ...styles.td(), textAlign: "left" }}>{s.Phone}</td>
+              <td style={styles.td()}>
+                <div style={styles.actionsRow()}>
                   <Link href={`/student/${s.StudentID}`}>
-                    <button
-                      style={{ ...actionBtn, backgroundColor: "#0f766e" }}
-                    >
-                      Details
-                    </button>
+                    <button style={styles.btnTeal()}>Details</button>
                   </Link>
-
                   <Link href={`/student/edit/${s.StudentID}`}>
-                    <button
-                      style={{ ...actionBtn, backgroundColor: "#16a34a" }}
-                    >
-                      Edit
-                    </button>
+                    <button style={styles.btnSuccess()}>Edit</button>
                   </Link>
-
                   <DeleteStudentBtn id={s.StudentID} />
                 </div>
               </td>
@@ -109,32 +45,6 @@ export default async function StudentList({
           ))}
         </tbody>
       </table>
-    </div>
+    </ListPageLayout>
   );
 }
-
-
-
-const thStyle = {
-  padding: "12px",
-  textAlign: "left" as const,
-  fontWeight: 600,
-  color: "#374151",
-  borderBottom: "2px solid #d1d5db",
-};
-
-const tdStyle = {
-  padding: "12px",
-  textAlign: "center" as const,
-  color: "#374151",
-};
-
-const actionBtn = {
-  color: "white",
-  padding: "6px 10px",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-  fontSize: "14px",
-  fontWeight: 500,
-};

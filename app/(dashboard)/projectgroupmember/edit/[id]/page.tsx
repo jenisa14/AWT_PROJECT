@@ -1,44 +1,7 @@
 import { UpdateProjectGroupMemberAction } from "@/app/actions/projectgroupmember/UpdateProjectGroupMemberAction";
 import { prisma } from "@/app/lib/prisma";
+import { theme, styles } from "@/app/lib/theme";
 import Link from "next/link";
-
-const formWrap = {
-  padding: "20px",
-  maxWidth: "480px",
-  margin: "0 auto",
-  backgroundColor: "#f8fafc",
-  fontFamily: "Segoe UI, Arial, sans-serif",
-};
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  marginBottom: "12px",
-  border: "1px solid #d1d5db",
-  borderRadius: "6px",
-  fontSize: "14px",
-  boxSizing: "border-box" as const,
-};
-const labelStyle = { display: "block", marginBottom: "4px", fontWeight: 500, color: "#374151" };
-const checkboxWrap = { marginBottom: "16px" };
-const btnWrap = { display: "flex", gap: "10px", marginTop: "16px" };
-const primaryBtn = {
-  backgroundColor: "#2563eb",
-  color: "white",
-  padding: "10px 16px",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  fontWeight: 500,
-};
-const secondaryBtn = {
-  backgroundColor: "#6b7280",
-  color: "white",
-  padding: "10px 16px",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  fontWeight: 500,
-};
 
 export default async function EditProjectGroupMember({
   params,
@@ -54,45 +17,51 @@ export default async function EditProjectGroupMember({
   const groups = await prisma.projectgroup.findMany();
   const students = await prisma.student.findMany();
 
-  if (!member) return <h2>Not found</h2>;
+  if (!member) return <h2 style={{ color: theme.colors.text }}>Not found</h2>;
 
   return (
-    <div style={formWrap}>
-      <form action={UpdateProjectGroupMemberAction}>
-        <input type="hidden" name="ProjectGroupMemberID" value={member.ProjectGroupMemberID} />
+    <div style={{ padding: theme.spacing.xl, backgroundColor: theme.colors.background, minHeight: "100%" }}>
+      <div style={styles.formCard()}>
+        <h2 style={{ ...styles.title(), marginBottom: theme.spacing.lg }}>Edit Group Member</h2>
 
-        <h2 style={{ marginBottom: "16px", color: "#111827" }}>Edit Group Member</h2>
+        <form action={UpdateProjectGroupMemberAction}>
+          <input type="hidden" name="ProjectGroupMemberID" value={member.ProjectGroupMemberID} />
 
-        <label style={labelStyle}>Project Group</label>
-        <select name="ProjectGroupID" defaultValue={member.ProjectGroupID} style={inputStyle}>
-          {groups.map((g) => (
-            <option key={g.ProjectGroupID} value={g.ProjectGroupID}>
-              {g.ProjectGroupName}
-            </option>
-          ))}
-        </select>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label style={styles.label()}>Project Group</label>
+            <select name="ProjectGroupID" defaultValue={member.ProjectGroupID} style={styles.input()}>
+              {groups.map((g) => (
+                <option key={g.ProjectGroupID} value={g.ProjectGroupID}>
+                  {g.ProjectGroupName}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <label style={labelStyle}>Student</label>
-        <select name="StudentID" defaultValue={member.StudentID} style={inputStyle}>
-          {students.map((s) => (
-            <option key={s.StudentID} value={s.StudentID}>
-              {s.StudentName}
-            </option>
-          ))}
-        </select>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label style={styles.label()}>Student</label>
+            <select name="StudentID" defaultValue={member.StudentID} style={styles.input()}>
+              {students.map((s) => (
+                <option key={s.StudentID} value={s.StudentID}>
+                  {s.StudentName}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div style={checkboxWrap}>
-          <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
-            <input type="checkbox" name="IsGroupLeader" defaultChecked={member.IsGroupLeader ?? false} />
-            <span>Is Group Leader</span>
-          </label>
-        </div>
+          <div style={styles.checkboxRow()}>
+            <label style={{ display: "flex", alignItems: "center", gap: theme.spacing.sm, cursor: "pointer", color: theme.colors.text }}>
+              <input type="checkbox" name="IsGroupLeader" defaultChecked={member.IsGroupLeader ?? false} />
+              <span>Is Group Leader</span>
+            </label>
+          </div>
 
-        <div style={btnWrap}>
-          <button type="submit" style={primaryBtn}>Update</button>
-          <Link href="/projectgroupmember"><button type="button" style={secondaryBtn}>Cancel</button></Link>
-        </div>
-      </form>
+          <div style={styles.btnWrap()}>
+            <button type="submit" style={styles.btnPrimary()}>Update</button>
+            <Link href="/projectgroupmember"><button type="button" style={styles.btnSecondary()}>Cancel</button></Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

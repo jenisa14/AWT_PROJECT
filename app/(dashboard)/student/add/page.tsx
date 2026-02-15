@@ -1,50 +1,33 @@
-import Link from "next/link";
 import { AddStudentAction } from "@/app/actions/student/AddStudentAction";
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  marginBottom: "12px",
-  border: "1px solid #d1d5db",
-  borderRadius: "6px",
-  fontSize: "14px",
-  boxSizing: "border-box" as const,
-};
-const btnWrap = { display: "flex", gap: "10px", marginTop: "16px" };
-const primaryBtn = {
-  backgroundColor: "#2563eb",
-  color: "white",
-  padding: "10px 16px",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  fontWeight: 500,
-};
-const secondaryBtn = {
-  backgroundColor: "#6b7280",
-  color: "white",
-  padding: "10px 16px",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  fontWeight: 500,
-};
+import { theme, styles } from "@/app/lib/theme";
+import Link from "next/link";
 
 export default function AddStudent() {
   return (
-    <div style={{ padding: "20px", maxWidth: "450px", margin: "40px auto", backgroundColor: "#f8fafc", fontFamily: "Segoe UI, Arial, sans-serif" }}>
-      <h2 style={{ marginBottom: "16px", color: "#111827" }}>Add Student</h2>
+    <div style={{ padding: theme.spacing.xl, backgroundColor: theme.colors.background, minHeight: "100%" }}>
+      <div style={styles.formCard()}>
+        <h2 style={{ ...styles.title(), marginBottom: theme.spacing.lg }}>Add Student</h2>
 
-      <form action={AddStudentAction}>
-        <input name="StudentName" placeholder="Student Name" style={inputStyle} />
-        <input name="Email" placeholder="Email" type="email" style={inputStyle} />
-        <input name="Phone" placeholder="Phone" style={inputStyle} />
+        <form action={AddStudentAction}>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="StudentName" style={styles.label()}>Student Name</label>
+            <input id="StudentName" name="StudentName" style={styles.input()} required />
+          </div>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="Email" style={styles.label()}>Email</label>
+            <input id="Email" name="Email" type="email" style={styles.input()} required />
+          </div>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="Phone" style={styles.label()}>Phone</label>
+            <input id="Phone" name="Phone" style={styles.input()} />
+          </div>
 
-        <div style={btnWrap}>
-          <button type="submit" style={primaryBtn}>Save Student</button>
-          <Link href="/student"><button type="button" style={secondaryBtn}>Cancel</button></Link>
-        </div>
-      </form>
+          <div style={styles.btnWrap()}>
+            <button type="submit" style={styles.btnPrimary()}>Save Student</button>
+            <Link href="/student"><button type="button" style={styles.btnSecondary()}>Cancel</button></Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,42 +1,7 @@
 import { prisma } from "@/app/lib/prisma";
 import { UpdateProjectTypeAction } from "@/app/actions/projecttype/UpdateProjectTypeAction";
+import { theme, styles } from "@/app/lib/theme";
 import Link from "next/link";
-
-const formWrap = {
-  padding: "20px",
-  maxWidth: "480px",
-  margin: "0 auto",
-  backgroundColor: "#f8fafc",
-  fontFamily: "Segoe UI, Arial, sans-serif",
-};
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  marginBottom: "12px",
-  border: "1px solid #d1d5db",
-  borderRadius: "6px",
-  fontSize: "14px",
-  boxSizing: "border-box" as const,
-};
-const btnWrap = { display: "flex", gap: "10px", marginTop: "16px" };
-const primaryBtn = {
-  backgroundColor: "#2563eb",
-  color: "white",
-  padding: "10px 16px",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  fontWeight: 500,
-};
-const secondaryBtn = {
-  backgroundColor: "#6b7280",
-  color: "white",
-  padding: "10px 16px",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  fontWeight: 500,
-};
 
 export default async function EditProjectType({
   params,
@@ -49,23 +14,31 @@ export default async function EditProjectType({
     where: { ProjectTypeID: Number(id) },
   });
 
-  if (!type) return <h2>Not Found</h2>;
+  if (!type) return <h2 style={{ color: theme.colors.text }}>Not Found</h2>;
 
   return (
-    <div style={formWrap}>
-      <form action={UpdateProjectTypeAction}>
-        <input type="hidden" name="ProjectTypeID" value={type.ProjectTypeID} />
+    <div style={{ padding: theme.spacing.xl, backgroundColor: theme.colors.background, minHeight: "100%" }}>
+      <div style={styles.formCard()}>
+        <h2 style={{ ...styles.title(), marginBottom: theme.spacing.lg }}>Edit Project Type</h2>
 
-        <h2 style={{ marginBottom: "16px", color: "#111827" }}>Edit Project Type</h2>
+        <form action={UpdateProjectTypeAction}>
+          <input type="hidden" name="ProjectTypeID" value={type.ProjectTypeID} />
 
-        <input type="text" name="ProjectTypeName" placeholder="Project Type Name" defaultValue={type.ProjectTypeName} required style={inputStyle} />
-        <input type="text" name="Description" placeholder="Description" defaultValue={type.Description ?? ""} style={inputStyle} />
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="ProjectTypeName" style={styles.label()}>Project Type Name</label>
+            <input id="ProjectTypeName" type="text" name="ProjectTypeName" defaultValue={type.ProjectTypeName} required style={styles.input()} />
+          </div>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="Description" style={styles.label()}>Description</label>
+            <input id="Description" type="text" name="Description" defaultValue={type.Description ?? ""} style={styles.input()} />
+          </div>
 
-        <div style={btnWrap}>
-          <button type="submit" style={primaryBtn}>Update</button>
-          <Link href="/projecttype"><button type="button" style={secondaryBtn}>Cancel</button></Link>
-        </div>
-      </form>
+          <div style={styles.btnWrap()}>
+            <button type="submit" style={styles.btnPrimary()}>Update</button>
+            <Link href="/projecttype"><button type="button" style={styles.btnSecondary()}>Cancel</button></Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

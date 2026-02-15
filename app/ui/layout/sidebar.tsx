@@ -1,40 +1,19 @@
 import Link from "next/link";
-
-const linkStyle = {
-  display: "block",
-  padding: "10px 12px",
-  color: "#111827",
-  textDecoration: "none",
-  borderRadius: "6px",
-  marginBottom: "6px",
-  backgroundColor: "#f3f4f6",
-};
+import { styles } from "@/app/lib/theme";
 
 export default function Sidebar() {
   return (
-    <aside
-      style={{
-        width: "250px",
-        backgroundColor: "#e5e7eb",
-        padding: "15px",
-      }}
-    >
-      <h3 style={{ marginBottom: "10px" }}>Master Tables</h3>
-
-      <Link href="/student" style={linkStyle}>Students</Link>
-      <Link href="/staff" style={linkStyle}>Staff</Link>
-      <Link href="/projecttype" style={linkStyle}>Project Types</Link>
-
-      <hr style={{ margin: "12px 0" }} />
-
-      <h3 style={{ marginBottom: "10px" }}>Project Management</h3>
-
-      <Link href="/projectgroup" style={linkStyle}>Project Groups</Link>
-      <Link href="/projectgroupmember" style={linkStyle}>Project Group Members</Link>
-      <Link href="/projectmeeting" style={linkStyle}>Project Meetings</Link>
-      <Link href="/projectmeetingattendance" style={linkStyle}>
-        Meeting Attendance
-      </Link>
+    <aside style={styles.sidebar()}>
+      <h3 style={{ marginBottom: 12, color: "#1e293b" }}>Master Tables</h3>
+      <Link href="/student" style={styles.sidebarLink()}>Students</Link>
+      <Link href="/staff" style={styles.sidebarLink()}>Staff</Link>
+      <Link href="/projecttype" style={styles.sidebarLink()}>Project Types</Link>
+      <hr style={{ margin: "12px 0", borderColor: "#e2e8f0" }} />
+      <h3 style={{ marginBottom: 12, color: "#1e293b" }}>Project Management</h3>
+      <Link href="/projectgroup" style={styles.sidebarLink()}>Project Groups</Link>
+      <Link href="/projectgroupmember" style={styles.sidebarLink()}>Project Group Members</Link>
+      <Link href="/projectmeeting" style={styles.sidebarLink()}>Project Meetings</Link>
+      <Link href="/projectmeetingattendance" style={styles.sidebarLink()}>Meeting Attendance</Link>
     </aside>
   );
 }

@@ -1,42 +1,7 @@
 import { prisma } from "@/app/lib/prisma";
 import { UpdateProjectGroupAction } from "@/app/actions/projectgroup/UpdateProjectGroupAction";
+import { theme, styles } from "@/app/lib/theme";
 import Link from "next/link";
-
-const formWrap = {
-  padding: "20px",
-  maxWidth: "480px",
-  margin: "0 auto",
-  backgroundColor: "#f8fafc",
-  fontFamily: "Segoe UI, Arial, sans-serif",
-};
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  marginBottom: "12px",
-  border: "1px solid #d1d5db",
-  borderRadius: "6px",
-  fontSize: "14px",
-  boxSizing: "border-box" as const,
-};
-const btnWrap = { display: "flex", gap: "10px", marginTop: "16px" };
-const primaryBtn = {
-  backgroundColor: "#2563eb",
-  color: "white",
-  padding: "10px 16px",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  fontWeight: 500,
-};
-const secondaryBtn = {
-  backgroundColor: "#6b7280",
-  color: "white",
-  padding: "10px 16px",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  fontWeight: 500,
-};
 
 export default async function EditProjectGroup({ params }: { params: Promise<{ id: number }> }) {
   const { id } = await params;
@@ -45,24 +10,35 @@ export default async function EditProjectGroup({ params }: { params: Promise<{ i
     where: { ProjectGroupID: Number(id) },
   });
 
-  if (!group) return <h2>Not found</h2>;
+  if (!group) return <h2 style={{ color: theme.colors.text }}>Not found</h2>;
 
   return (
-    <div style={formWrap}>
-      <form action={UpdateProjectGroupAction}>
-        <input type="hidden" name="ProjectGroupID" value={group.ProjectGroupID} />
+    <div style={{ padding: theme.spacing.xl, backgroundColor: theme.colors.background, minHeight: "100%" }}>
+      <div style={styles.formCard()}>
+        <h2 style={{ ...styles.title(), marginBottom: theme.spacing.lg }}>Edit Project Group</h2>
 
-        <h2 style={{ marginBottom: "16px", color: "#111827" }}>Edit Project Group</h2>
+        <form action={UpdateProjectGroupAction}>
+          <input type="hidden" name="ProjectGroupID" value={group.ProjectGroupID} />
 
-        <input name="ProjectGroupName" placeholder="Group Name" defaultValue={group.ProjectGroupName} required style={inputStyle} />
-        <input name="ProjectTitle" placeholder="Project Title" defaultValue={group.ProjectTitle} required style={inputStyle} />
-        <input name="ProjectArea" placeholder="Project Area" defaultValue={group.ProjectArea ?? ""} style={inputStyle} />
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="ProjectGroupName" style={styles.label()}>Group Name</label>
+            <input id="ProjectGroupName" name="ProjectGroupName" defaultValue={group.ProjectGroupName} required style={styles.input()} />
+          </div>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="ProjectTitle" style={styles.label()}>Project Title</label>
+            <input id="ProjectTitle" name="ProjectTitle" defaultValue={group.ProjectTitle} required style={styles.input()} />
+          </div>
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="ProjectArea" style={styles.label()}>Project Area</label>
+            <input id="ProjectArea" name="ProjectArea" defaultValue={group.ProjectArea ?? ""} style={styles.input()} />
+          </div>
 
-        <div style={btnWrap}>
-          <button type="submit" style={primaryBtn}>Update</button>
-          <Link href="/projectgroup"><button type="button" style={secondaryBtn}>Cancel</button></Link>
-        </div>
-      </form>
+          <div style={styles.btnWrap()}>
+            <button type="submit" style={styles.btnPrimary()}>Update</button>
+            <Link href="/projectgroup"><button type="button" style={styles.btnSecondary()}>Cancel</button></Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
