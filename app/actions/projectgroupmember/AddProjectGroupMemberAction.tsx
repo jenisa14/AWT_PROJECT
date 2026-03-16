@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 
@@ -13,7 +13,7 @@ export async function AddProjectGroupMemberAction(formData: FormData) {
     throw new Error("Invalid data");
   }
 
-  await prisma.projectgroupmember.create({
+  await prisma.projectGroupMember.create({
     data: {
       ProjectGroupID,
       StudentID,

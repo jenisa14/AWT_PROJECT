@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { RegisterAction } from "@/app/actions/auth/RegisterAction";
-import ErrorToast from "@/app/components/ErrorToast";
-import { theme, styles } from "@/app/lib/theme";
+import ErrorToast from "@/components/ErrorToast";
+import { theme, styles } from "@/lib/theme";
 
 function RegisterForm() {
   const searchParams = useSearchParams();
@@ -29,8 +29,8 @@ function RegisterForm() {
       setClientError("Name, Email and Phone are required.");
       return;
     }
-    if (roleValue === "staff" && (!password || !password.trim())) {
-      setClientError("Password is required for Staff and cannot be empty.");
+    if (!password || !password.trim()) {
+      setClientError("Password is required and cannot be empty.");
       return;
     }
 
@@ -84,21 +84,18 @@ function RegisterForm() {
             <input id="Phone" name="Phone" type="text" placeholder="e.g. 9876543210" style={styles.input()} maxLength={15} required />
           </div>
 
-          {role === "staff" && (
-            <div style={{ marginBottom: theme.spacing.lg }}>
-              <label htmlFor="Password" style={styles.label()}>Password (required)</label>
-              <input
-                id="Password"
-                name="Password"
-                type="password"
-                placeholder="e.g. gopi@123"
-                style={styles.input()}
-                required
-                minLength={1}
-              />
-              <p style={{ fontSize: 12, color: theme.colors.textMuted, marginTop: 4 }}>Staff table requires non-empty password.</p>
-            </div>
-          )}
+          <div style={{ marginBottom: theme.spacing.lg }}>
+            <label htmlFor="Password" style={styles.label()}>Password (required)</label>
+            <input
+              id="Password"
+              name="Password"
+              type="password"
+              placeholder="e.g. password123"
+              style={styles.input()}
+              required
+              minLength={1}
+            />
+          </div>
 
           <button type="submit" style={{ ...styles.btnPrimary(), width: "100%", padding: 14, fontSize: 16, marginTop: theme.spacing.sm }}>
             Register

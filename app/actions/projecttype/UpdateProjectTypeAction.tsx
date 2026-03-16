@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 export async function UpdateProjectTypeAction(formData: FormData) {
@@ -8,7 +8,7 @@ export async function UpdateProjectTypeAction(formData: FormData) {
   const ProjectTypeName = formData.get("ProjectTypeName")?.toString();
   const Description = formData.get("Description")?.toString();
 
-  await prisma.projecttype.update({
+  await prisma.projectType.update({
     where: { ProjectTypeID },
     data: { ProjectTypeName, Description },
   });

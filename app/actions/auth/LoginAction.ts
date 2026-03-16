@@ -1,13 +1,10 @@
 "use server";
 
-import { prisma } from "@/app/lib/prisma";
-import { createSession } from "@/app/lib/session";
+import { prisma } from "@/lib/prisma";
+import { createSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
-/**
- * ADMIN login: No database table. Uses env ADMIN_EMAIL / ADMIN_PASSWORD.
- * STAFF and STUDENT use Staff and Student tables from your SPMS schema.
- */
+
 export async function LoginAction(formData: FormData) {
   const email = formData.get("Email")?.toString()?.trim();
   const password = formData.get("Password")?.toString();

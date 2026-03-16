@@ -12,7 +12,7 @@ export default function StudentRegisterPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Manual logic for now
+   
     console.log({
       studentName,
       email,

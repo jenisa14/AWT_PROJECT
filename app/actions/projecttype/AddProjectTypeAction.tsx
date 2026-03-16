@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 export async function AddProjectTypeAction(formData: FormData) {
@@ -11,7 +11,7 @@ export async function AddProjectTypeAction(formData: FormData) {
     throw new Error("All fields required");
   }
 
-  await prisma.projecttype.create({
+  await prisma.projectType.create({
     data: {
       ProjectTypeName,
       Description,

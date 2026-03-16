@@ -1,12 +1,12 @@
 "use server";
 
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 export default async function DeleteProjectGroupAction(formData: FormData) {
   const id = Number(formData.get("ProjectGroupID"));
 
-  await prisma.projectgroup.delete({
+  await prisma.projectGroup.delete({
     where: { ProjectGroupID: id },
   });
 

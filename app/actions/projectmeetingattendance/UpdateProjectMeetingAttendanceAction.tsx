@@ -1,12 +1,12 @@
 "use server";
 
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 export async function UpdateProjectMeetingAttendanceAction(formData: FormData) {
   const id = Number(formData.get("ProjectMeetingAttendanceID"));
 
-  await prisma.projectmeetingattendance.update({
+  await prisma.projectMeetingAttendance.update({
     where: { ProjectMeetingAttendanceID: id },
     data: {
       ProjectMeetingID: Number(formData.get("ProjectMeetingID")),

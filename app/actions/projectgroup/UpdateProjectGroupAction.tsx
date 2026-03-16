@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 export async function UpdateProjectGroupAction(formData: FormData) {
@@ -13,7 +13,7 @@ export async function UpdateProjectGroupAction(formData: FormData) {
     throw new Error("Required");
   }
 
-  await prisma.projectgroup.update({
+  await prisma.projectGroup.update({
     where: { ProjectGroupID },
     data: { ProjectGroupName, ProjectTitle, ProjectArea },
   });

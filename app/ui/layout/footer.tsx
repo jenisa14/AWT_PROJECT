@@ -1,4 +1,4 @@
-import { styles } from "@/app/lib/theme";
+import { styles } from "@/lib/theme";
 
 export default function Footer() {
   return (

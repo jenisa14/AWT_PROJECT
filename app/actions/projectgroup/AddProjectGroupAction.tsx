@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 
@@ -16,7 +16,7 @@ export async function AddProjectGroupAction(formData: FormData) {
     throw new Error("Required fields missing");
   }
 
-  await prisma.projectgroup.create({
+  await prisma.projectGroup.create({
     data: {
       ProjectGroupName,
       ProjectTitle,

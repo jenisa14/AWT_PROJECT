@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
@@ -22,7 +22,7 @@ export async function AddProjectMeetingAction(formData: FormData) {
     throw new Error("All fields are required");
   }
 
-  await prisma.projectmeeting.create({
+  await prisma.projectMeeting.create({
     data: {
       ProjectGroupID,
       GuideStaffID,

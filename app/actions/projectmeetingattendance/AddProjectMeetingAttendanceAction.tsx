@@ -1,10 +1,10 @@
 "use server";
 
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 export async function AddProjectMeetingAttendanceAction(formData: FormData) {
-  await prisma.projectmeetingattendance.create({
+  await prisma.projectMeetingAttendance.create({
     data: {
       ProjectMeetingID: Number(formData.get("ProjectMeetingID")),
       StudentID: Number(formData.get("StudentID")),

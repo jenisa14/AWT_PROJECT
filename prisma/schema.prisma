@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../app/generated/prisma"
 }
 
@@ -7,7 +7,7 @@ datasource db {
   provider = "mysql"
 }
 
-model projectgroup {
+model ProjectGroup {
   ProjectGroupID   Int       @id @default(autoincrement())
   ProjectGroupName String    @db.VarChar(100)
   ProjectTypeID    Int
@@ -18,12 +18,19 @@ model projectgroup {
   Created          DateTime? @default(now()) @db.DateTime(0)
   Modified         DateTime? @default(now()) @db.DateTime(0)
 
+  ProjectType    ProjectType @relation(fields: [ProjectTypeID], references: [ProjectTypeID])
+  ConvenerStaff  Staff       @relation("ConvenerStaff", fields: [ConvenerStaffID], references: [StaffID])
+  ExpertStaff    Staff?      @relation("ExpertStaff", fields: [ExpertStaffID], references: [StaffID])
+  Members        ProjectGroupMember[]
+  Meetings       ProjectMeeting[]
+
   @@index([ConvenerStaffID], map: "ConvenerStaffID")
   @@index([ExpertStaffID], map: "ExpertStaffID")
   @@index([ProjectTypeID], map: "ProjectTypeID")
+  @@map("projectgroup")
 }
 
-model projectgroupmember {
+model ProjectGroupMember {
   ProjectGroupMemberID Int       @id @default(autoincrement())
   ProjectGroupID       Int
   StudentID            Int
@@ -31,11 +38,15 @@ model projectgroupmember {
   Created              DateTime? @default(now()) @db.DateTime(0)
   Modified             DateTime? @default(now()) @db.DateTime(0)
 
+  ProjectGroup ProjectGroup @relation(fields: [ProjectGroupID], references: [ProjectGroupID])
+  Student      Student      @relation(fields: [StudentID], references: [StudentID])
+
   @@index([ProjectGroupID], map: "ProjectGroupID")
   @@index([StudentID], map: "StudentID")
+  @@map("projectgroupmember")
 }
 
-model projectmeeting {
+model ProjectMeeting {
   ProjectMeetingID Int       @id @default(autoincrement())
   ProjectGroupID   Int
   GuideStaffID     Int
@@ -45,11 +56,16 @@ model projectmeeting {
   Created          DateTime? @default(now()) @db.DateTime(0)
   Modified         DateTime? @default(now()) @db.DateTime(0)
 
+  ProjectGroup ProjectGroup @relation(fields: [ProjectGroupID], references: [ProjectGroupID])
+  GuideStaff   Staff        @relation(fields: [GuideStaffID], references: [StaffID])
+  Attendance   ProjectMeetingAttendance[]
+
   @@index([GuideStaffID], map: "GuideStaffID")
   @@index([ProjectGroupID], map: "ProjectGroupID")
+  @@map("projectmeeting")
 }
 
-model projectmeetingattendance {
+model ProjectMeetingAttendance {
   ProjectMeetingAttendanceID Int       @id @default(autoincrement())
   ProjectMeetingID           Int
   StudentID                  Int
@@ -57,33 +73,65 @@ model projectmeetingattendance {
   Created                    DateTime? @default(now()) @db.DateTime(0)
   Modified                   DateTime? @default(now()) @db.DateTime(0)
 
+  ProjectMeeting ProjectMeeting @relation(fields: [ProjectMeetingID], references: [ProjectMeetingID])
+  Student        Student        @relation(fields: [StudentID], references: [StudentID])
+
   @@index([ProjectMeetingID], map: "ProjectMeetingID")
   @@index([StudentID], map: "StudentID")
+  @@map("projectmeetingattendance")
 }
 
-model projecttype {
+model ProjectType {
   ProjectTypeID   Int       @id @default(autoincrement())
   ProjectTypeName String    @unique(map: "ProjectTypeName") @db.VarChar(100)
   Description     String?   @db.VarChar(255)
   Created         DateTime? @default(now()) @db.DateTime(0)
   Modified        DateTime? @default(now()) @db.DateTime(0)
+  
+  ProjectGroups   ProjectGroup[]
+  @@map("projecttype")
 }
 
-model staff {
+model Staff {
   StaffID   Int       @id @default(autoincrement())
   StaffName String    @db.VarChar(150)
   Email     String?   @unique(map: "Email") @db.VarChar(150)
   Phone     String?   @db.VarChar(15)
   Password  String    @db.VarChar(255)
+  Role      String    @default("FACULTY") @db.VarChar(20)
   Created   DateTime? @default(now()) @db.DateTime(0)
   Modified  DateTime? @default(now()) @db.DateTime(0)
+
+  ConventedGroups ProjectGroup[] @relation("ConvenerStaff")
+  ExpertGroups    ProjectGroup[] @relation("ExpertStaff")
+  Meetings        ProjectMeeting[]
+
+  @@map("staff")
 }
 
-model student {
+model Student {
   StudentID   Int       @id @default(autoincrement())
   StudentName String    @db.VarChar(150)
   Email       String?   @unique(map: "Email") @db.VarChar(150)
   Phone       String?   @db.VarChar(15)
+  Password    String    @default("") @db.VarChar(255)
   Created     DateTime? @default(now()) @db.DateTime(0)
   Modified    DateTime? @default(now()) @db.DateTime(0)
+
+  ProjectMemberships ProjectGroupMember[]
+  MeetingAttendance  ProjectMeetingAttendance[]
+
+  @@map("student")
+}
+
+model Document {
+  DocumentID   Int       @id @default(autoincrement())
+  FileName     String    @db.VarChar(255)
+  FilePath     String    @db.VarChar(255)
+  FileSize     Int?
+  FileType     String?   @db.VarChar(50)
+  UploadedBy   Int?      // Link to Student if needed, or leave generic
+  Created      DateTime? @default(now()) @db.DateTime(0)
+
+  @@map("document")
 }

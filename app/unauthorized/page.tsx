@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { theme, styles } from "@/app/lib/theme";
+import { theme, styles } from "@/lib/theme";
 
 export default function UnauthorizedPage() {
   return (
